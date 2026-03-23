@@ -51,7 +51,6 @@ install -m 0644 "$ROOT_DIR/src/usr/share/rpcd/acl.d/luci-app-aliddns.json" "$DAT
 cat > "$CONTROL_DIR/control" <<EOF
 Package: $PKG_NAME
 Version: $PKG_VERSION
-Release: $PKG_RELEASE
 Architecture: $PKG_ARCH
 Section: net
 Priority: optional
@@ -68,12 +67,24 @@ printf '2.0\n' > "$STAGE_DIR/debian-binary"
 
 (
 	cd "$CONTROL_DIR"
-	tar -czf "$STAGE_DIR/control.tar.gz" ./control ./conffiles
+	tar \
+		--format=ustar \
+		--numeric-owner \
+		--owner=0 \
+		--group=0 \
+		-czf "$STAGE_DIR/control.tar.gz" \
+		./control ./conffiles
 )
 
 (
 	cd "$DATA_DIR"
-	tar -czf "$STAGE_DIR/data.tar.gz" .
+	tar \
+		--format=ustar \
+		--numeric-owner \
+		--owner=0 \
+		--group=0 \
+		-czf "$STAGE_DIR/data.tar.gz" \
+		.
 )
 
 IPK_PATH="$OUTPUT_DIR/${PKG_NAME}_${PKG_VERSION}_${PKG_ARCH}.ipk"
